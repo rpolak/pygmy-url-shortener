@@ -16,3 +16,6 @@ dist
 .DS_Store
 .cache
 .pytest_cache/
+
+
+/pygmy/config/pygmy.cfg
