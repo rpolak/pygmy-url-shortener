@@ -5,11 +5,11 @@ import pytest
 import subprocess
 
 __all__ = [
-    'run_test_server',
+    "run_test_server",
 ]
 
-_PYGMY_SUBPROCESS_LOG_FILE = 'pygmy/data/pygmy_subproc.log'
-_PYGMYUI_SUBPROCESS_LOG_FILE = 'pygmy/data/pygmyui_subproc.log'
+_PYGMY_SUBPROCESS_LOG_FILE = "pygmy/data/pygmy_subproc.log"
+_PYGMYUI_SUBPROCESS_LOG_FILE = "pygmy/data/pygmyui_subproc.log"
 
 
 class PygmyApiTestServer:
@@ -18,10 +18,9 @@ class PygmyApiTestServer:
     @classmethod
     def start_pygmy_api_server(cls):
         # os.chdir('src')
-        command = ['python', 'pygmy_api_run.py', 'test']
-        fobj = open(_PYGMY_SUBPROCESS_LOG_FILE, 'w')
-        cls.pygmyapi_proc = subprocess.Popen(
-            command, stdout=fobj, stderr=fobj)
+        command = ["python", "pygmy_api_run.py", "test"]
+        fobj = open(_PYGMY_SUBPROCESS_LOG_FILE, "w")
+        cls.pygmyapi_proc = subprocess.Popen(command, stdout=fobj, stderr=fobj)
         # Wait for server to start
         time.sleep(1)
         # os.chdir('..')
@@ -39,10 +38,16 @@ class PygmyUiTestServer:
 
     @classmethod
     def start_pygmy_ui_server(cls):
-        command = ['gunicorn','-b 127.0.0.1:8001', '--chdir', 'pygmyui', '-w 1', 'pygmyui.wsgi']
-        fobj = open(_PYGMY_SUBPROCESS_LOG_FILE, 'w')
-        cls.pygmyui_proc = subprocess.Popen(
-            command, stdout=fobj, stderr=fobj)
+        command = [
+            "gunicorn",
+            "-b 127.0.0.1:8001",
+            "--chdir",
+            "pygmyui",
+            "-w 1",
+            "pygmyui.wsgi",
+        ]
+        fobj = open(_PYGMY_SUBPROCESS_LOG_FILE, "w")
+        cls.pygmyui_proc = subprocess.Popen(command, stdout=fobj, stderr=fobj)
         # Wait for server to start
         time.sleep(1)
         return cls.pygmyui_proc
@@ -54,10 +59,10 @@ class PygmyUiTestServer:
         cls.pygmyui_proc.terminate()
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope="class")
 def run_test_server(request):
     # Setup
-    os.environ.setdefault('PYGMYUI_TEST', 'true')
+    os.environ.setdefault("PYGMYUI_TEST", "true")
     request.cls.pygmyapi_proc = PygmyApiTestServer.start_pygmy_api_server()
     request.cls.pygmyui_proc = PygmyUiTestServer.start_pygmy_ui_server()
     yield
